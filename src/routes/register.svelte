@@ -1,12 +1,64 @@
 <script>
+    import CustomInput from '../lib/CustomInput.svelte';
+    import SHA256 from 'crypto-js/sha256';
+    import { API_URL } from '../main';
 
+    let email = "";
+    let password = "";
+    let error = "";
+
+    const areStringValide = (...str) => {
+        return str.every(str => str && str.trim() !== "");
+    }   
+
+    const handleLoginSubmit = (e) => {
+        e.preventDefault();
+
+        if(!areStringValide(email, password)){
+            error = "Please fill all the fields";
+            return;
+        }
+
+        const apiRequest = API_URL + new URL(e.target.action).pathname;
+
+        let passwordHash = SHA256(password).toString();
+
+        const data = {
+            email: email,
+            password: passwordHash
+        }
+
+        fetch(apiRequest, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.token) {
+                    error = "";
+                    localStorage.setItem("token", data.token);
+                    window.location.href = "/home";
+                } else {
+                    error = data.message;
+                }
+            })
+    }
 </script>
 
 <div class="mainContainer">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div id="container">
         <h1>Sign In</h1>
-        <form>
+        <form action="/admin/login" on:submit|preventDefault={handleLoginSubmit}>
+            <CustomInput type="email" title="Email" required bind:value={email} />
+            <CustomInput type="password" title="Password" required bind:value={password} />
+            <p class="error">{error}</p>
+            <CustomInput type="submit" title="Sign In"/>
+        </form>
+        <!-- <form>
             <div class="input">
                 <label for="email">Email *</label>
                 <input type="email" id="email" name="email" placeholder="Email" required>
@@ -20,7 +72,7 @@
             <div class="input">
                 <input type="submit" value="Sign In">
             </div>
-        </form>
+        </form> -->
     </div>
 </div>
 
