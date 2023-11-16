@@ -5,16 +5,44 @@
     let foodtypes = [];
     let error = "";
 
+    async function loadImg(nameUrl){
+        try{
+            const response = await fetch(`${API_URL}/foodtype/${nameUrl}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    },
+                })
+            const name = response.headers.get('X-Name');
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            console.log(name, url)
+
+            foodtypes = [
+                ...foodtypes,
+                {
+                    name: name,
+                    url: url
+                }
+            ]
+        }catch(err){
+            console.log(err);
+        }
+    }
+
     fetch(`${API_URL}/foodtype`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
         .then((res) => res.json())
         .then((data) => {
-            foodtypes = data;
+            data.forEach((foodtype) => {
+                loadImg(foodtype.name);
+            })
         })
 
     const handleSendFoodtype = (e) => {
