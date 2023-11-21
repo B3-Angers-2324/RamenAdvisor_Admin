@@ -1,36 +1,102 @@
 <script lang="ts">
     import Template from "../../lib/template.svelte";
+    import { onMount } from "svelte";
+    import { API_URL } from "../../main";
+
+    let activeReport = []
+    let noMoreReport = false;
+
+    onMount(() => {
+        loadReported(5, 0);
+    });
+
+    function loadReported(limit: number, offset: number){
+        fetch(`${API_URL}/message/reported?limit=${limit}&offset=${offset}`,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+            .then((res) => res.json() )
+            .then(res => {
+                console.log(res);
+                activeReport = [...activeReport, ...res.obj];
+                if(res.obj.length < limit){
+                    noMoreReport = true;
+                }
+            })
+            .catch(err => console.error(err));
+    }
+
+    function accept_message(reportId :string, index :number){
+        if(deleteReport(reportId, false, index)){
+            activeReport.splice(index, 1);
+            loadReported(1, 4);
+        }
+    }
+
+    function reject_message(reportId :string, index :number){
+        if(deleteReport(reportId, true, index)){
+            activeReport.splice(index, 1);
+            loadReported(1, 4);
+        }
+    }
+
+    function deleteReport(reportId :string, rejected :boolean ,index :number){
+        let output = false;
+        fetch(`${API_URL}/message/report/${reportId}?rejected=${rejected}`,{
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+            .then(async (res) => {
+                console.log(res);
+                let resJson = await res.json();
+                return {status: res.status, body: resJson}
+            })
+            .then(res => {
+                console.log(res);
+                if (res.status != 200) alert(res.body.message)
+                else {
+                    output = true;
+                }
+            })
+        return output;
+    }
 </script>
 
 <Template>
     <h1>Commentaires</h1>
 
-    {#each Array(5) as _, i}
-        <div id="commentairesContainer">
-            <div id="commentaire">
+    {#each activeReport as report, i}
+        <div class="commentairesContainer">
+            <div class="commentaire">
                 <div id="left">
                     <div id="title">
-                        <h1>User {i+1}</h1>
-                        <h3>Restaurant {(Math.random() * 2 + 1).toFixed()}</h3>
+                        <h1>{report.user.firstName} {report.user.lastName}</h1>
+                        <h3>{report.restaurant.name}</h3>
                     </div>
-                    <p>In deserunt quis proident adipisicing cillum velit incididunt reprehenderit ut dolor elit anim ipsum culpa. Veniam elit ut sint exercitation non sint. Cupidatat sunt dolore deserunt aliqua non.
-                        In deserunt quis proident adipisicing cillum velit incididunt reprehenderit ut dolor elit anim ipsum culpa. Veniam elit ut sint exercitation non sint. Cupidatat sunt dolore deserunt aliqua non.
-                        In deserunt quis proident adipisicing cillum velit incididunt reprehenderit ut dolor elit anim ipsum culpa. Veniam elit ut sint exercitation non sint. Cupidatat sunt dolore deserunt aliqua non.
-                    </p>
+                    <p>{report.message.message}</p>
                 </div>
                 <div id="right">
-                    <p>{(Math.random() * 5).toFixed(1)}/5</p>
-                    <button class="material-symbols-rounded">close</button>
-                    <button class="material-symbols-rounded">check</button>
+                    <p>{report.message.note}/5</p>
+                    <button class="material-symbols-rounded" on:click={()=>reject_message(report._id,i)}>close</button>
+                    <button class="material-symbols-rounded" on:click={()=>accept_message(report._id,i)}>check</button>
                 </div>
             </div>
         </div>
     {/each}
+    {#if noMoreReport}
+        <div class="commentairesContainer">No more report</div>
+    {/if}
 </Template>
 
 
 <style lang="scss">
-    #commentairesContainer{
+    .commentairesContainer{
         display: flex;
         justify-content: center;
         align-items: center;
@@ -38,7 +104,8 @@
         height: fit-content;
         margin-bottom: var(--spacing);
 
-        #commentaire{
+        
+        .commentaire{
             display: flex;
             justify-content: space-between;
             align-items: center;
