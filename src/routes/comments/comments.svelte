@@ -77,6 +77,7 @@
                 <div id="left">
                     <div id="title">
                         <h1>{report.user.firstName} {report.user.lastName}</h1>
+                        <h1>Signalement: {report.nbReport}</h1>
                         <h3>{report.restaurant.name}</h3>
                     </div>
                     <p>{report.message.message}</p>
