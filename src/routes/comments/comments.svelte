@@ -20,7 +20,6 @@
         })
             .then((res) => res.json() )
             .then(res => {
-                console.log(res);
                 activeReport = [...activeReport, ...res.obj];
                 if(res.obj.length < limit){
                     noMoreReport = true;
@@ -53,12 +52,10 @@
             },
         })
             .then(async (res) => {
-                console.log(res);
                 let resJson = await res.json();
                 return {status: res.status, body: resJson}
             })
             .then(res => {
-                console.log(res);
                 if (res.status != 200) alert(res.body.message)
                 else {
                     output = true;
