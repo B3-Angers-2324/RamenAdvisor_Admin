@@ -1,5 +1,5 @@
 <script>
-    import CustomInput from '../lib/CustomInput.svelte';
+    import CustomInput from '../lib/customInput.svelte';
     import SHA256 from 'crypto-js/sha256';
     import { API_URL } from '../main';
 

@@ -5,9 +5,9 @@
 
     let restaurants = [];
 
-    if(!localStorage.getItem('token')){
-        window.location.href = '/';
-    }
+    // if(!localStorage.getItem('token')){
+    //     window.location.href = '/';
+    // }
 
     // fetch(`${API_URL}/owner/restaurants`, {
     //         method: 'GET',
@@ -40,25 +40,42 @@
             <img src={logo} alt="logo">
             <h1>RamenAdvisor</h1>
         </div>
-        
-        
-        <div id="partContainer">
+        <div id="foodTypeContainer">
             <h3>
-                <span class="material-symbols-rounded">psychology_alt</span>
-                Otre Recoursec
+                <span class="material-symbols-rounded">edit</span>
+                Nourriture
             </h3>
-            
-            <div id="partList">
-
+            <div id="foodTypeBtn">
+                <a href='/foodtype' class="btn">
+                    Editer type nouriture
+                </a>
             </div>
         </div>
-
-        <div id="partContainer">
-            <div id="partList">
-                <a href="/foodtype" class="restaurant"><span class="material-symbols-rounded">edit</span> Editer type nouriture</a>
+        <div id="newOwnerContainer">
+            <h3>
+                <span class="material-symbols-rounded">list</span>
+                Liste des Owners en attente
+            </h3>
+            <!-- la liste des commentaires -->
+            <div id="newOwnerList">
+                {#each Array(5) as _,i}
+                    <a href='/profil/{i}' class="btn">
+                        Owner name {i}
+                    </a>
+                {/each}
             </div>
         </div>
-        
+        <div id="foodTypeContainer">
+            <h3>
+                <span class="material-symbols-rounded">chat</span>
+                Commentaires Signalés
+            </h3>
+            <div id="foodTypeBtn">
+                <a href='/comments' class="btn">
+                    Commentaires
+                </a>
+            </div>
+        </div>
         <div id="logout">
             <button on:click={logout}>
                 <span class="material-symbols-rounded">logout</span>
@@ -169,7 +186,8 @@
             }
         }
 
-        #partContainer{
+        #foodTypeContainer,
+        #newOwnerContainer{
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -190,7 +208,8 @@
                 }
             }
 
-            #partList{
+            #foodTypeBtn,
+            #newOwnerList{
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -198,8 +217,7 @@
                 height: 100%;
                 width: 100%;
 
-                .restaurant,
-                .commentaire{
+                .btn{
                     width: 90%;
                     min-height: 3em;
                     background-color: var(--brunswick-green);
@@ -247,7 +265,6 @@
                     margin-bottom: 1em;
                     border-radius: var(--radius);
                     text-align: center;
-                    line-height: 2em;
                 }
             }
         }
@@ -259,6 +276,7 @@
             width: calc(100% - var(--spacing));
             background-color: var(--dark-bone);
             padding: calc(var(--spacing)/2);
+            gap: 1em;
 
             a, button{
                 width: 100%;
@@ -276,8 +294,14 @@
                 align-items: center;
 
                 span{
-                    margin-right: calc(var(--spacing)/2);
                     font-size: 1.5em;
+                }
+            }
+
+            a{
+                flex: 3;
+                span{
+                    padding: 0 calc(var(--spacing) / 2);
                 }
             }
         }

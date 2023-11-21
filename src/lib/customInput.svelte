@@ -2,24 +2,12 @@
     export let type = "";
     export let title = "".toLowerCase();
     export let required = false;
-    export let handleExitInput = (e) => {};
+    export let disabled = false;
 
     export let value = "";
 
     const handleChange = (e) => {
-        switch(type){
-            case "tel":
-                if(e.target.value.length > 10)
-                    e.target.value = e.target.value.slice(0, 10);
-                else if(e.target.value.length > 0)
-                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                break;
-        }
         value = e.target.value;
-    }
-
-    const handleExit = (e) => {
-        handleExitInput(e);
     }
 </script>
 
@@ -27,10 +15,10 @@
     {#if type=="submit"}
         <input type="{type}" value="{title}">
     {:else if type!="select"}
-        <label for="{title}">{required ? `${title} *` : title}</label>
-        <input type="{type}" name="{title}" id="{title}" placeholder="{title}" {required} value={value} on:focusout={handleExit} on:input={handleChange}>
+        <label for="{title}">{required ? `${title}*` : title}</label>
+        <input type="{type}" name="{title}" id="{title}" placeholder="{title}" {required} {disabled} value={value} on:input={handleChange}>
     {:else}
-        <label for="{title}">{required ? `${title} *` : title}</label>
+        <label for="{title}">{title}</label>
         <select name="{title}" id="{title}" value={value} on:change={handleChange}>
             <option value="" disabled selected>Sélectionnez une option</option>
             <slot />
