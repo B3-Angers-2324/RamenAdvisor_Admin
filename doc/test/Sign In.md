@@ -1,4 +1,4 @@
-# **Functional test for the Sign In page of Owner :**
+# **Functional test for the Sign In page of Administrator :**
 
 ## Test 1 : Display
 
