@@ -77,6 +77,11 @@
 </div>
 
 <style lang="scss">
+    .error{
+        color: var(--error);
+        margin-bottom: calc(var(--spacing) / 2);
+        text-align: center;
+    }
     .mainContainer{
         width: 100%;
         height: 100%;
