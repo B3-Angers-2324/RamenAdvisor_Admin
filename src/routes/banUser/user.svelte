@@ -180,7 +180,6 @@
                             justify-content: space-between;
                             align-items: center;
 
-                            h1,
                             h3{
                                 color: var(--black);
                                 padding: 0;

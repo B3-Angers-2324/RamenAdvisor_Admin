@@ -7,6 +7,8 @@
   import Comments from "./routes/comments/comments.svelte";
   import BanUser from "./routes/banUser/banUser.svelte";
   import BanUserId from "./routes/banUser/user.svelte";
+  import ListOwner from "./routes/ownerList/ownerList.svelte";
+  import ListOwnerProfil from "./routes/ownerList/owner.svelte";
   export let url = "";
 </script>
 
@@ -21,6 +23,8 @@
     <Route path="/comments"><Comments/></Route>
     <Route path="/banUser/home"><BanUser/></Route>
     <Route path="/banUser/user/:id"><BanUserId/></Route>
+    <Route path="/ownerList/home"><ListOwner/></Route>
+    <Route path="/ownerList/owner/:id"><ListOwnerProfil/></Route>
 
     <Route path="*"><p>404</p></Route>
   </Router> 

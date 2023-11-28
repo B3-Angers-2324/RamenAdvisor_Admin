@@ -87,6 +87,17 @@
                 </a>
             </div>
         </div>
+        <div id="ownerList">
+            <h3>
+                <span class="material-symbols-rounded">list</span>
+                Owner List
+            </h3>
+            <div id="foodTypeBtn">
+                <a href='/ownerList/home' class="btn">
+                    List
+                </a>
+            </div>
+        </div>
         <div id="logout">
             <button on:click={logout}>
                 <span class="material-symbols-rounded">logout</span>
@@ -107,68 +118,6 @@
         height: 100vh;
         overflow: hidden;
         display: flex;
-    }
-
-    main{
-        align-items: center;
-        height: 100vh;
-        width: 100vw;
-    }
-    #popup{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: var(--spacing);
-        border-radius: var(--radius);
-        z-index: 100000;
-        width: fit-content;
-        height: fit-content;
-        background-color: var(--bone);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 1em;
-
-        h1{
-            color: var(--white);
-            font-size: 2em;
-            margin-bottom: 1em;
-            display: flex;
-            align-items: center;
-
-            span{
-                margin-right: calc(var(--spacing)/2);
-                font-size: 1.5em;
-            }
-        }
-
-        p{
-            color: var(--white);
-            font-size: 1.25em;
-            margin-bottom: 1em;
-        }
-
-        #btn{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1em;
-
-            a, button{
-                padding: calc(var(--spacing) / 2) calc(var(--spacing) * 2);
-                border-radius: var(--radius);
-                border: none;
-                background-color: var(--brunswick-green);
-                color: var(--bone);
-                cursor: pointer;
-        
-                &:focus{
-                    outline: none;
-                }
-            }
-        }
     }
 
     #nav{
@@ -199,7 +148,8 @@
 
         #foodTypeContainer,
         #newOwnerContainer,
-        #banUserContainer{
+        #banUserContainer,
+        #ownerList{
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -262,21 +212,6 @@
                         background-color: rgba(0, 0, 0, 0.15);
                         cursor: pointer;
                     }
-                }
-
-                .add{
-                    width: 100%;
-                    height: 2em;
-                    background-color: var(--zomp);
-                    border: none;
-                    color: var(--bone);
-                    font-size: 1.5em;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: .5s;
-                    margin-bottom: 1em;
-                    border-radius: var(--radius);
-                    text-align: center;
                 }
             }
         }
