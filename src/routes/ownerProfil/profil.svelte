@@ -7,7 +7,7 @@
 </script>
 
 <Template>
-    <h1>User Profil {id}</h1>
+    <h1>Owner Profil {id}</h1>
     <div id="content">
         <div id="containerInput">
             <CustomInput title="Nom" type="text" value="" required/>

@@ -76,6 +76,17 @@
                 </a>
             </div>
         </div>
+        <div id="banUserContainer">
+            <h3>
+                <span class="material-symbols-rounded">gavel</span>
+                Ban User
+            </h3>
+            <div id="foodTypeBtn">
+                <a href='/banUser/home' class="btn">
+                    Users
+                </a>
+            </div>
+        </div>
         <div id="logout">
             <button on:click={logout}>
                 <span class="material-symbols-rounded">logout</span>
@@ -187,7 +198,8 @@
         }
 
         #foodTypeContainer,
-        #newOwnerContainer{
+        #newOwnerContainer,
+        #banUserContainer{
             display: flex;
             flex-direction: column;
             justify-content: center;
