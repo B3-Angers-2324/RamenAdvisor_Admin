@@ -48,7 +48,6 @@
                         </div>
                         <div id="right">
                             <p>{(Math.random() * 5).toFixed(1)}/5</p>
-                            <button class="material-symbols-rounded">close</button>
                             <button class="material-symbols-rounded">check</button>
                         </div>
                     </div>
