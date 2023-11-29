@@ -57,7 +57,36 @@
 - Clicking the "V" button should accept the ban request, changes should be successfully saved, and the owner should disapear from the list.
 
 
-## Test 6: "Disconnect" Button
+## Test 7: "Owner List" Button
+
+1. Clicking the "Owner List" button should display a list of registered owners on RamenAdvisor.
+2. The list should contain "Nom," "Prénom," and the number of sanctions.
+3. The list is dynamically sorted based on the maximum number of sanctions.
+4. When clicked on the card, the owner's profile should be displayed.
+
+### Owner Profile Page
+
+1. The owner's profile should contain the following information:
+   - **Nom: [Dynamic Name]**
+   - **Prénom: [Dynamic Prénom]**
+   - **Mail: [Dynamic Email]**
+   - **Date de naissance: [Dynamic Date of Birth]**
+
+2. The owner's profile should contain a list of restaurants owned by the owner.
+   - Each restaurant card should have a button to redirect to the restaurant page.
+
+### Restaurant Page
+
+1. The restaurant page should display information about the restaurant, including comments and ratings.
+2. Each comment could be deleted by clicking the "Delete Comment" button.
+
+#### Actions
+
+- Clicking the "Delete Account" button should remove the owner's account, and changes should be successfully saved.
+- After clicking "Delete Account," the owner should disappear from the list.
+
+
+## Test 7: "Disconnect" Button
 
 1. Clicking the "Disconnect" button should log the user out of RamenAdvisor.
 2. The user should be redirected to the login page or the home page after logout.
