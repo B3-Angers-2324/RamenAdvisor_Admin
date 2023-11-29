@@ -14,7 +14,7 @@
 <Template>
     <div id="top">
         <div id="icon">
-            <Link to="/banUser/home">
+            <Link to="/ownerList/home">
                 <span class="material-symbols-rounded">arrow_back</span>
             </Link>
         </div>
