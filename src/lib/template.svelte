@@ -25,11 +25,34 @@
     //     .then((data) => {
     //         restaurants = data.restaurants;
     //     })
+    // if(!localStorage.getItem('token')){
+    //     window.location.href = '/';
+    // }
+
+    let owners = [];
+
+    fetch(`${API_URL}/user/getAll`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+        .then((res) => {
+            if(res.status == 401){
+                window.location.href = '/';
+            }
+            return res.json()
+        })
+        .then((data) => {
+            owners = data.owners;
+        })
 
     const logout = () => {
         localStorage.removeItem('token');
         window.location.href = '/';
     }
+    console.log("test:", owners);
 </script>
 
 <div class="template">
@@ -58,9 +81,14 @@
             </h3>
             <!-- la liste des commentaires -->
             <div id="newOwnerList">
-                {#each Array(5) as _,i}
+                <!-- {#each Array(5) as _,i}
                     <a href='/profil/{i}' class="btn">
                         Owner name {i}
+                    </a>
+                {/each} -->
+                {#each owners as owner}
+                    <a href={`/profil/${owner.id}`} class="btn">
+                        {owner.name}
                     </a>
                 {/each}
             </div>
