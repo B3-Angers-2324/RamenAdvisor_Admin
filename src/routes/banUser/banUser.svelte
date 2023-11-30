@@ -1,23 +1,57 @@
 <script>
     import Template from "../../lib/template.svelte";
+    import { API_URL } from "../../main";
     let sanction = Number((Math.random() * 5).toFixed());
+
+
+    let firstname
+    let lastname
+
+    let users = []
+
+    async function searchUser(){
+        console.log(firstname, lastname)
+        //Build URL 
+        let url = `${API_URL}/admin/search/user?`
+        if(firstname) url += `firstName=${firstname}&`
+        if(lastname) url += `lastName=${lastname}&`
+        let response = await fetch(url, {
+            method: "GET",
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                "Content-Type": "application/json"
+            }
+        });
+        if (response.ok) {
+            let data = await response.json();
+            users = data.users
+        } else {
+            let data = await response.json();
+            users = []
+            console.log(data.message);
+        }
+    }
 </script>
 
 <Template>
     <h1>Ban User</h1>
     <div id="container">
         <form>
-            <input type="text" id="name" name="name" placeholder="Nom">
-            <input type="text" id="name" name="name" placeholder="Prénom">
+            <input bind:value={lastname} on:change={searchUser} type="text" id="name" name="name" placeholder="Nom">
+            <input bind:value={firstname}  on:change={searchUser} type="text" id="name" name="name" placeholder="Prénom">
         </form>
         <div id="userContainer">
-            {#each Array(20) as _,i}
-                <a id="user" href="/banUser/user/{i}">
-                    <h2>Nom {i}</h2>
-                    <h2>Prénom {i}</h2>
-                    <h4>{sanction == 1 ? sanction+" sanction" : sanction+" sanctions"}</h4>
+            {#each users as user}
+                <a id="user" href="/banUser/user/{user._id}">
+                    <h2>{user.lastName}</h2>
+                    <span> - </span>
+                    <h2>{user.firstName}</h2>
+                    <h4>{user.email}</h4>
                 </a>
             {/each}
+            {#if users.length == 0}
+                <h4>Aucun utilisateur trouvé</h4>
+            {/if}
         </div>
     </div>
 </Template>

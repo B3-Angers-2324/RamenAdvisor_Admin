@@ -1,14 +1,84 @@
 <script>
+    import { onMount } from "svelte";
     import Template from "../../lib/template.svelte";
     import { Link } from "svelte-routing";
+    import { API_URL } from "../../main";
+    import Loadmore from "../../lib/loadmore.svelte";
 
     let url = window.location.href;
     let id = url.substring(url.lastIndexOf('/') + 1);
 
-    let nom = "Doe"
-    let prenom = "Jhon"
-    let mail = "john.doe@gmail.com"
-    let birthDate = "01/01/2000"
+    let user = undefined;
+    let messages = [];
+    let more = false;
+
+    const limit = 5;
+
+    //on mount 
+    onMount(async () => {
+		fetchUser(id);
+        loadMessages(id, limit, 0);
+	});
+
+    async function fetchUser(id){
+        let response = await fetch(`${API_URL}/admin/user/profile/${id}`,{
+            method: "GET",
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                "Content-Type": "application/json"
+            }
+        })
+        let data = await response.json();
+        if(response.ok){
+            user = data;
+            user.birthDay = new Date(user.birthDay).toLocaleDateString('fr-FR', {year: 'numeric', month: 'long', day: 'numeric'});
+        }else{
+            console.log(data.message);
+        }
+    }
+
+    async function loadMessages(id, limit, offset){
+        try{
+            let response = await fetch(`${API_URL}/admin/user/message/${id}?limit=${limit}&offset=${offset}`,{
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+            });
+            let data = await response.json();
+            if (response.ok) {
+                messages = [...messages, ...data.messages];
+            } else {
+                throw new Error(data.message);
+            }
+            more = data.more;
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+    async function banUser(){
+        let response = await fetch(`${API_URL}/admin/user/ban/${id}`,{
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            body: JSON.stringify({
+                id: id,
+                ban: true
+            })
+        })
+        let data = await response.json();
+        if (response.ok) {
+            window.location.href = "/banUser/home";
+        } else {
+            console.log(data.message);
+            alert("Une erreur est survenue")
+        }
+    }
+
 </script>
 
 <Template>
@@ -20,39 +90,37 @@
         </div>
         <h2>User id {id}</h2>
         <div id="submit">
-            <button class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Refuser">close</button>
-            <button class="material-symbols-rounded icon" title="Accepter">done</button>
+            <button class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Refuser" on:click={banUser}>close</button>
         </div>
     </div>
     <div id="content">
+        {#if user != undefined}
         <div id="info">
             <h3>Info</h3>
-            <p><span>Name:</span> {nom}</p>
-            <p><span>Prénom</span>: {prenom}</p>
-            <p><span>Mail:</span> {mail}</p>
-            <p><span>Date de naissance:</span> {birthDate}</p>
+            <p><span>Name:</span> {user.lastName}</p>
+            <p><span>Prénom</span>: {user.firstName}</p>
+            <p><span>Mail:</span> {user.email}</p>
+            <p><span>Date de naissance:</span> <br>{user.birthDay}</p>
         </div>
+        {/if}
         <div id="comments">
             <h3>Commentaires</h3>
-            {#each Array(5) as _, i}
+            {#each messages as msg}
                 <div id="commentairesContainer">
                     <div id="commentaire">
                         <div id="left">
                             <div id="title">
-                                <h3>Restaurant {(Math.random() * 2 + 1).toFixed()}</h3>
+                                <h3>{msg.restaurant.name}</h3>
                             </div>
-                            <p>In deserunt quis proident adipisicing cillum velit incididunt reprehenderit ut dolor elit anim ipsum culpa. Veniam elit ut sint exercitation non sint. Cupidatat sunt dolore deserunt aliqua non.
-                                In deserunt quis proident adipisicing cillum velit incididunt reprehenderit ut dolor elit anim ipsum culpa. Veniam elit ut sint exercitation non sint. Cupidatat sunt dolore deserunt aliqua non.
-                                In deserunt quis proident adipisicing cillum velit incididunt reprehenderit ut dolor elit anim ipsum culpa. Veniam elit ut sint exercitation non sint. Cupidatat sunt dolore deserunt aliqua non.
-                            </p>
+                            <p>{msg.message}</p>
                         </div>
                         <div id="right">
-                            <p>{(Math.random() * 5).toFixed(1)}/5</p>
-                            <button class="material-symbols-rounded">check</button>
+                            <p>{msg.note}/5</p>
                         </div>
                     </div>
                 </div>
             {/each}
+            <Loadmore bind:more={more} on:loadMore={() => loadMessages(id, 10, messages.length)} />
         </div>
     </div>
 </Template>
