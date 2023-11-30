@@ -1,37 +1,43 @@
 <script lang="ts">
     import { API_URL } from "../main";
-
     import logo from '../assets/icon.png';
+    import { onMount } from "svelte";
 
     let restaurants = [];
-
-    // if(!localStorage.getItem('token')){
-    //     window.location.href = '/';
-    // }
-
-    // fetch(`${API_URL}/owner/restaurants`, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Authorization': 'Bearer ' + localStorage.getItem('token')
-    //         },
-    //     })
-    //     .then((res) => {
-    //         if(res.status == 401){
-    //             window.location.href = '/';
-    //         }
-    //         return res.json()
-    //     })
-    //     .then((data) => {
-    //         restaurants = data.restaurants;
-    //     })
-    // if(!localStorage.getItem('token')){
-    //     window.location.href = '/';
-    // }
-
     let owners = [];
 
-    fetch(`${API_URL}/user/getAll`, {
+    onMount (async () => {
+        getOwnerNoValidate();
+    })
+
+    async function unName() {
+        // if(!localStorage.getItem('token')){
+        //     window.location.href = '/';
+        // }
+
+        // fetch(`${API_URL}/owner/restaurants`, {
+        //         method: 'GET',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': 'Bearer ' + localStorage.getItem('token')
+        //         },
+        //     })
+        //     .then((res) => {
+        //         if(res.status == 401){
+        //             window.location.href = '/';
+        //         }
+        //         return res.json()
+        //     })
+        //     .then((data) => {
+        //         restaurants = data.restaurants;
+        //     })
+        // if(!localStorage.getItem('token')){
+        //     window.location.href = '/';
+        // }   
+    }
+
+    async function getOwnerNoValidate () {
+        fetch(`${API_URL}/admin/getValidate`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -47,12 +53,12 @@
         .then((data) => {
             owners = data.owners;
         })
+    }
 
     const logout = () => {
         localStorage.removeItem('token');
         window.location.href = '/';
     }
-    console.log("test:", owners);
 </script>
 
 <div class="template">
@@ -80,18 +86,17 @@
                 Liste des Owners en attente
             </h3>
             <!-- la liste des commentaires -->
+
+
             <div id="newOwnerList">
-                <!-- {#each Array(5) as _,i}
-                    <a href='/profil/{i}' class="btn">
-                        Owner name {i}
-                    </a>
-                {/each} -->
                 {#each owners as owner}
-                    <a href={`/profil/${owner.id}`} class="btn">
-                        {owner.name}
+                    <a href='/profil/{owner.i}' class="btn">
+                        {owner.lastName}
                     </a>
                 {/each}
             </div>
+
+
         </div>
         <div id="foodTypeContainer">
             <h3>
