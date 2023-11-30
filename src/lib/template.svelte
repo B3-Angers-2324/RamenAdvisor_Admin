@@ -40,6 +40,17 @@
             <img src={logo} alt="logo">
             <h1>RamenAdvisor</h1>
         </div>
+        <div id="createModContainer">
+            <h3>
+                <span class="material-symbols-rounded">person_add</span>
+                Create Moderator
+            </h3>
+            <div id="foodTypeBtn">
+                <a href='/createModerator' class="btn">
+                    Create
+                </a>
+            </div>
+        </div>
         <div id="foodTypeContainer">
             <h3>
                 <span class="material-symbols-rounded">edit</span>
@@ -149,7 +160,8 @@
         #foodTypeContainer,
         #newOwnerContainer,
         #banUserContainer,
-        #ownerList{
+        #ownerList,
+        #createModContainer{
             display: flex;
             flex-direction: column;
             justify-content: center;
