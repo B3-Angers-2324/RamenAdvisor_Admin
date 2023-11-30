@@ -68,6 +68,10 @@
 <Template>
     <h1>Commentaires</h1>
 
+    <form>
+        <input type="text" id="restaurant_name" name="restaurant_name" placeholder="Nom du restaurant">
+    </form>
+
     {#each activeReport as report, i}
         <div class="commentairesContainer">
             <div class="commentaire">
@@ -94,6 +98,27 @@
 
 
 <style lang="scss">
+    form{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--spacing);
+
+        input{
+            margin: 0 var(--spacing);
+            width: calc(100% - var(--spacing) * 2);
+            height: 3em;
+            padding: 0 calc(var(--spacing) / 2);
+            border-radius: var(--radius);
+            border: none;
+            outline: none;
+            font-size: 1em;
+            color: var(--black);
+        }
+    }
+
     .commentairesContainer{
         display: flex;
         justify-content: center;

@@ -30,8 +30,11 @@
 ## Test 4: "Reported Comments" Button
 
 1. Clicking the "Reported Comments" button should display a list of reported comments.
-2. The list should contain reported comments, and there should be an option to moderate each comment (e.g., delete or hide the comment).
-3. Moderating a comment should be possible, and changes should be successfully saved.
+2. There should be a search bar to search for a restaurant.
+
+### Reported Comments List
+1. The list should contain "nom", "prénom", the number of reports, the name of the restaurant, the grade and the comment.
+2. The cross button should delete the comment, and the check button should validate the comment.
 
 ## Test 5: "Ban Users" Button
 
