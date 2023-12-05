@@ -3,31 +3,28 @@
 
     import logo from '../assets/icon.png';
 
-    let restaurants = [];
-
     // if(!localStorage.getItem('token')){
     //     window.location.href = '/';
     // }
 
-    // fetch(`${API_URL}/owner/restaurants`, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Authorization': 'Bearer ' + localStorage.getItem('token')
-    //         },
-    //     })
-    //     .then((res) => {
-    //         if(res.status == 401){
-    //             window.location.href = '/';
-    //         }
-    //         return res.json()
-    //     })
-    //     .then((data) => {
-    //         restaurants = data.restaurants;
-    //     })
+    // exemple of the middleware of front
+    fetch(`${API_URL}/admin/nav`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            if(data.ad) localStorage.setItem('ad', '1');
+            console.log(data);
+            // TODO : add menu here
+        });
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('ad');
         window.location.href = '/';
     }
 </script>
