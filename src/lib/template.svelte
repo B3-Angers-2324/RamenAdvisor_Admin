@@ -90,7 +90,7 @@
 
             <div id="newOwnerList">
                 {#each owners as owner}
-                    <a href='/profil/{owner.i}' class="btn">
+                    <a href='/profil/{owner.id}' class="btn">
                         {owner.lastName}
                     </a>
                 {/each}

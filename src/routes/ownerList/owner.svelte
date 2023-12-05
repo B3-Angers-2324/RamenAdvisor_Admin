@@ -1,14 +1,57 @@
 <script>
     import Template from "../../lib/template.svelte";
     import { Link } from "svelte-routing";
+    import { onMount } from "svelte";
+    import { API_URL } from "../../main";
 
     let url = window.location.href;
     let id = url.substring(url.lastIndexOf('/') + 1);
 
-    let nom = "Doe"
-    let prenom = "Jhon"
-    let mail = "john.doe@gmail.com"
-    let birthDate = "01/01/2000"
+    let information = {
+        firstName: "",
+        lastName: "",
+        email: ""
+    }
+    // let birthDate = ""
+    let restaurants = [];
+
+    onMount (async () => {
+        // getOwner();
+        getRestaurants();
+    })
+
+    // async function getOwner () {
+    //     fetch(`${API_URL}/admin/getOne`, {
+    //         method: "GET",
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Authorization': 'Bearer ' + localStorage.getItem('token')
+    //         }
+    //     })
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //         information = data.owner;
+    //     })
+    // }
+
+    async function getRestaurants () {
+        fetch(`${API_URL}/admin/restaurants`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+        .then((res) => {
+            if(res.status == 401){
+                window.location.href = '/';
+            }
+            return res.json()
+        })
+        .then((data) => {
+            restaurants = data.restaurants;
+        })
+    }
 </script>
 
 <Template>
@@ -26,13 +69,18 @@
     <div id="content">
         <div id="info">
             <h3>Info</h3>
-            <p><span>Name:</span> {nom}</p>
-            <p><span>Prénom</span>: {prenom}</p>
-            <p><span>Mail:</span> {mail}</p>
-            <p><span>Date de naissance:</span> {birthDate}</p>
+            <!-- <p><span>Name:</span> {information.lastName}</p>
+            <p><span>Prénom</span>: {information.firstName}</p>
+            <p><span>Mail:</span> {information.email}</p>
+            <p><span>Date de naissance:</span> {birthDate}</p> -->
         </div>
         <div id="comments">
             <h3>Restaurants List</h3>
+            <!--{#each restaurants as restaurant}
+                <a href={""} class="restaurant">
+                    <h2>{restaurant.name}</h2>
+                </a>
+            {/each}-->
             {#each Array(5) as _, i}
                 <a href="" id="restaurant">
                     <h2>Restaurant {i}</h2>
