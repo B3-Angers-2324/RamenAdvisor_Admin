@@ -18,8 +18,9 @@
         .then((res) => res.json())
         .then((data) => {
             if(data.ad) localStorage.setItem('ad', '1');
-            console.log(data);
+
             // TODO : add menu here
+            
         });
 
     const logout = () => {
