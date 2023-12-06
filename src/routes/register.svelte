@@ -1,5 +1,5 @@
 <script>
-    import CustomInput from '../lib/CustomInput.svelte';
+    import CustomInput from '../lib/customInput.svelte';
     import SHA256 from 'crypto-js/sha256';
     import { API_URL } from '../main';
 
@@ -37,6 +37,9 @@
             })
             .then((res) => res.json())
             .then((data) => {
+                if(data.mod){
+                    localStorage.setItem("mod", "1");
+                }
                 if (data.token) {
                     error = "";
                     localStorage.setItem("token", data.token);
@@ -77,6 +80,11 @@
 </div>
 
 <style lang="scss">
+    .error{
+        color: var(--error);
+        margin-bottom: calc(var(--spacing) / 2);
+        text-align: center;
+    }
     .mainContainer{
         width: 100%;
         height: 100%;

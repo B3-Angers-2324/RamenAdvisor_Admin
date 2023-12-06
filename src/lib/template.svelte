@@ -3,31 +3,29 @@
 
     import logo from '../assets/icon.png';
 
-    let restaurants = [];
+    // if(!localStorage.getItem('token')){
+    //     window.location.href = '/';
+    // }
 
-    if(!localStorage.getItem('token')){
-        window.location.href = '/';
-    }
+    // exemple of the middleware of front
+    fetch(`${API_URL}/admin/nav`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            if(data.ad) localStorage.setItem('ad', '1');
 
-    // fetch(`${API_URL}/owner/restaurants`, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Authorization': 'Bearer ' + localStorage.getItem('token')
-    //         },
-    //     })
-    //     .then((res) => {
-    //         if(res.status == 401){
-    //             window.location.href = '/';
-    //         }
-    //         return res.json()
-    //     })
-    //     .then((data) => {
-    //         restaurants = data.restaurants;
-    //     })
+            // TODO : add menu here
+            
+        });
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('ad');
         window.location.href = '/';
     }
 </script>
@@ -40,25 +38,75 @@
             <img src={logo} alt="logo">
             <h1>RamenAdvisor</h1>
         </div>
-        
-        
-        <div id="partContainer">
+        <div id="createModContainer">
             <h3>
-                <span class="material-symbols-rounded">psychology_alt</span>
-                Otre Recoursec
+                <span class="material-symbols-rounded">person_add</span>
+                Create Moderator
             </h3>
-            
-            <div id="partList">
-
+            <div id="foodTypeBtn">
+                <a href='/createModerator' class="btn">
+                    Create
+                </a>
             </div>
         </div>
-
-        <div id="partContainer">
-            <div id="partList">
-                <a href="/foodtype" class="restaurant"><span class="material-symbols-rounded">edit</span> Editer type nouriture</a>
+        <div id="foodTypeContainer">
+            <h3>
+                <span class="material-symbols-rounded">edit</span>
+                Nourriture
+            </h3>
+            <div id="foodTypeBtn">
+                <a href='/foodtype' class="btn">
+                    Editer type nouriture
+                </a>
             </div>
         </div>
-        
+        <div id="newOwnerContainer">
+            <h3>
+                <span class="material-symbols-rounded">list</span>
+                Liste des Owners en attente
+            </h3>
+            <!-- la liste des commentaires -->
+            <div id="newOwnerList">
+                {#each Array(5) as _,i}
+                    <a href='/profil/{i}' class="btn">
+                        Owner name {i}
+                    </a>
+                {/each}
+            </div>
+        </div>
+        <div id="foodTypeContainer">
+            <h3>
+                <span class="material-symbols-rounded">chat</span>
+                Commentaires Signalés
+            </h3>
+            <div id="foodTypeBtn">
+                <a href='/comments' class="btn">
+                    Commentaires
+                </a>
+            </div>
+        </div>
+        <div id="banUserContainer">
+            <h3>
+                <span class="material-symbols-rounded">gavel</span>
+                Ban User
+            </h3>
+            <div id="foodTypeBtn">
+                <a href='/banUser/home' class="btn">
+                    Users
+                </a>
+            </div>
+        </div>
+        <div id="ownerList">
+            <h3>
+                <span class="material-symbols-rounded">list</span>
+                Owner List
+            </h3>
+            <div id="foodTypeBtn">
+                <a href='/ownerList/home' class="btn">
+                    List
+                </a>
+            </div>
+        </div>
         <div id="logout">
             <button on:click={logout}>
                 <span class="material-symbols-rounded">logout</span>
@@ -79,68 +127,6 @@
         height: 100vh;
         overflow: hidden;
         display: flex;
-    }
-
-    main{
-        align-items: center;
-        height: 100vh;
-        width: 100vw;
-    }
-    #popup{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: var(--spacing);
-        border-radius: var(--radius);
-        z-index: 100000;
-        width: fit-content;
-        height: fit-content;
-        background-color: var(--bone);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 1em;
-
-        h1{
-            color: var(--white);
-            font-size: 2em;
-            margin-bottom: 1em;
-            display: flex;
-            align-items: center;
-
-            span{
-                margin-right: calc(var(--spacing)/2);
-                font-size: 1.5em;
-            }
-        }
-
-        p{
-            color: var(--white);
-            font-size: 1.25em;
-            margin-bottom: 1em;
-        }
-
-        #btn{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1em;
-
-            a, button{
-                padding: calc(var(--spacing) / 2) calc(var(--spacing) * 2);
-                border-radius: var(--radius);
-                border: none;
-                background-color: var(--brunswick-green);
-                color: var(--bone);
-                cursor: pointer;
-        
-                &:focus{
-                    outline: none;
-                }
-            }
-        }
     }
 
     #nav{
@@ -169,7 +155,11 @@
             }
         }
 
-        #partContainer{
+        #foodTypeContainer,
+        #newOwnerContainer,
+        #banUserContainer,
+        #ownerList,
+        #createModContainer{
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -190,7 +180,8 @@
                 }
             }
 
-            #partList{
+            #foodTypeBtn,
+            #newOwnerList{
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -198,8 +189,7 @@
                 height: 100%;
                 width: 100%;
 
-                .restaurant,
-                .commentaire{
+                .btn{
                     width: 90%;
                     min-height: 3em;
                     background-color: var(--brunswick-green);
@@ -233,22 +223,6 @@
                         cursor: pointer;
                     }
                 }
-
-                .add{
-                    width: 100%;
-                    height: 2em;
-                    background-color: var(--zomp);
-                    border: none;
-                    color: var(--bone);
-                    font-size: 1.5em;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: .5s;
-                    margin-bottom: 1em;
-                    border-radius: var(--radius);
-                    text-align: center;
-                    line-height: 2em;
-                }
             }
         }
 
@@ -259,6 +233,7 @@
             width: calc(100% - var(--spacing));
             background-color: var(--dark-bone);
             padding: calc(var(--spacing)/2);
+            gap: 1em;
 
             a, button{
                 width: 100%;
@@ -276,8 +251,14 @@
                 align-items: center;
 
                 span{
-                    margin-right: calc(var(--spacing)/2);
                     font-size: 1.5em;
+                }
+            }
+
+            a{
+                flex: 3;
+                span{
+                    padding: 0 calc(var(--spacing) / 2);
                 }
             }
         }
