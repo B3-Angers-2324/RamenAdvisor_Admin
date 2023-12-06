@@ -1,23 +1,95 @@
 <script>
   import Template from "../../lib/template.svelte";
+  import { onMount } from "svelte";
+  import { API_URL } from "../../main";
+  import SHA256 from "crypto-js/sha256";
+
+  let moderators = [];
+  let error = "";
+
+  onMount ( async () => {
+    getModerators();
+  })
+
+  const getModerators = async () => {
+    const response = await fetch(`${API_URL}/admin/moderator`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
+    });
+    const data = await response.json();
+    if(response.status === 200){
+      moderators = data;
+    }else{
+      error = data.message;
+    }
+  }
+
+  const handleOnAddingSubmit = async (event) => {
+    event.preventDefault();
+    const email = event.target.email.value;
+    const password = event.target.password.value;
+    let passwordHash = SHA256(password).toString();
+
+    const dataToSend = {
+      email: email,
+      password: passwordHash
+    }
+
+    const response = await fetch(`${API_URL}/admin/moderator`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
+      body: JSON.stringify(dataToSend)
+    });
+    const data = await response.json();
+    if(response.status === 200){
+      getModerators();
+      error = "";
+    }else{
+      error = data.message;
+    }
+  }
+
+  const handleOnDelete = async (id) => {
+    const response = await fetch(`${API_URL}/admin/moderator/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
+    });
+    const data = await response.json();
+    if(response.status === 200){
+      getModerators();
+      error = "";
+    }else{
+      error = data.message;
+    }
+  }
 </script>
 
 <Template>
   <h1>Create Moderator</h1>
   <div id="container">
-      <form>
-          <input type="text" id="name" name="name" placeholder="Nom">
-          <input type="text" id="surname" name="surname" placeholder="Prénom">
+      <form action="" on:submit|preventDefault={handleOnAddingSubmit}>
+          <input type="text" id="email" name="email" placeholder="Email">
+          <input type="password" id="password" name="password" placeholder="Password">
           <input type="submit" value="Submit">
       </form>
 
+      <p class="error">{error}</p>
+
       <div id="userContainer">
         <h1>Moderator List</h1>
-          {#each Array(12) as _,i}
+          {#each moderators as moderator, i}
               <div id="user">
-                  <h2>Nom {i}</h2>
-                  <h2>Prénom {i}</h2>
-                  <button>
+                  <h2>{moderator.email}</h2>
+                  <button on:click={() => handleOnDelete(moderator._id)}>
                     <span class="material-symbols-rounded">delete</span>
                   </button>
               </div>
@@ -27,6 +99,11 @@
 </Template>
 
 <style lang="scss">
+  .error{
+    margin-top: calc(var(--spacing)/2);
+    color: var(--error);
+  }
+
   h1{
       color: var(--black);
       margin-bottom: 1em;
@@ -81,7 +158,7 @@
           align-items: center;
           flex-direction: column;
           width: 100%;
-          padding: var(--spacing);
+          padding: calc(var(--spacing) / 2);
           gap: var(--spacing);
 
           h1{
