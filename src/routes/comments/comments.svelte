@@ -6,12 +6,23 @@
     let activeReport = []
     let noMoreReport = false;
 
-    onMount(() => {
+    let restaurantName = "";
+
+    onMount(async() => {
         loadReported(5, 0);
     });
 
-    function loadReported(limit: number, offset: number){
-        fetch(`${API_URL}/message/reported?limit=${limit}&offset=${offset}`,{
+    async function onRestaurantNameChange(e){
+        e.preventDefault();
+        activeReport = [];
+        noMoreReport = false;
+        loadReported(5, 0, restaurantName);
+    }
+
+    function loadReported(limit: number, offset: number, name: string = ""){
+        let url : string = `${API_URL}/message/reported?limit=${limit}&offset=${offset}`;
+        (name != "") ? url += `&restaurantName=${name}` : null;
+        fetch(url ,{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -68,6 +79,10 @@
 <Template>
     <h1>Commentaires</h1>
 
+    <form on:submit={onRestaurantNameChange}>
+        <input type="text" id="restaurant_name" name="restaurant_name" placeholder="Nom du restaurant" bind:value={restaurantName}>
+    </form>
+
     {#each activeReport as report, i}
         <div class="commentairesContainer">
             <div class="commentaire">
@@ -89,11 +104,35 @@
     {/each}
     {#if noMoreReport}
         <div class="commentairesContainer">No more report</div>
+    {:else}
+        <div class="commentairesContainer">. . .</div>
     {/if}
 </Template>
 
 
 <style lang="scss">
+    form{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--spacing);
+        padding: 0 0 1em 0 ;
+
+        input{
+            margin: 0 var(--spacing);
+            width: calc(100% - var(--spacing) * 2);
+            height: 3em;
+            padding: 0 calc(var(--spacing) / 2);
+            border-radius: var(--radius);
+            border: none;
+            outline: none;
+            font-size: 1em;
+            color: var(--black);
+        }
+    }
+
     .commentairesContainer{
         display: flex;
         justify-content: center;
