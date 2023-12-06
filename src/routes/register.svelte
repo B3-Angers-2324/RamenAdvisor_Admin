@@ -37,6 +37,9 @@
             })
             .then((res) => res.json())
             .then((data) => {
+                if(data.mod){
+                    localStorage.setItem("mod", "1");
+                }
                 if (data.token) {
                     error = "";
                     localStorage.setItem("token", data.token);
