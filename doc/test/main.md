@@ -94,3 +94,25 @@
 1. Clicking the "Disconnect" button should log the user out of RamenAdvisor.
 2. The user should be redirected to the login page or the home page after logout.
 3. After logout, certain functionalities specific to the logged-in user (e.g., accessing the pending owners list) should no longer be accessible.
+
+## Test 8: "Create Moderator" Button
+
+1. Clicking the "Create Moderator" button should display a form to create a new moderator and visualize all moderators on RamenAdvisor.
+2. The form should include input fields for "Nom" and "Prénom," along with a submit button.
+
+### Create Moderator Page
+
+#### Input Fields:
+- Nom
+- Prénom
+- Submit Button
+
+#### Moderator List
+
+1. After creating a moderator, the new moderator's information should appear in the moderator list.
+2. For each card of "Nom" and "Prénom" of the moderator, there should be a button to delete the moderator.
+
+#### Actions
+
+- Clicking the "Submit" button should create a new moderator, and changes should be successfully saved.
+- Clicking the "Delete Moderator" button on each card should remove the respective moderator, and changes should be successfully saved.

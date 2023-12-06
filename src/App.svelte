@@ -9,6 +9,8 @@
   import BanUserId from "./routes/banUser/user.svelte";
   import ListOwner from "./routes/ownerList/ownerList.svelte";
   import ListOwnerProfil from "./routes/ownerList/owner.svelte";
+  import CreateModerator from "./routes/createModerator/CreateModerator.svelte";
+
   export let url = "";
 </script>
 
@@ -25,7 +27,7 @@
     <Route path="/banUser/user/:id"><BanUserId/></Route>
     <Route path="/ownerList/home"><ListOwner/></Route>
     <Route path="/ownerList/owner/:id"><ListOwnerProfil/></Route>
-
+    <Route path="/createModerator"><CreateModerator/></Route>
     <Route path="*"><p>404</p></Route>
   </Router> 
 </main>
