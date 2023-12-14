@@ -78,18 +78,24 @@
     <div id="container">
         <form action="/foodtype" on:submit|preventDefault={handleSendFoodtype}>
             <input type="text" name="name" id="" placeholder="Name of foodtype" bind:this={inputText}>
-            <input name="svg" type="file" bind:this={inputFile}>
+            <input name="svg" id="file" type="file" bind:this={inputFile} class="input-file" />
+            <label for="file" class="label-file">
+                <span class="material-symbols-rounded" style="padding-right: 10px;">draft</span>
+                Choose a file
+            </label>
             <input type="submit">
             <p style="color: red">{error}</p>
         </form>
         <div id="containerImages">
             {#each foodtypes as foodtype}
                 <div>
-                    <h2>{foodtype.name}</h2>
-                    <button on:click={() => handleOnDelete(foodtype._id)}>
-                        <span class="material-symbols-rounded">delete</span>
-                    </button>
-                    <img src={foodtype.url} style="width:200px;" alt="">
+                    <div id="header">
+                        <h2>{foodtype.name}</h2>
+                        <button on:click={() => handleOnDelete(foodtype._id)}>
+                            <span class="material-symbols-rounded">delete</span>
+                        </button>
+                    </div>
+                    <img src={foodtype.url} alt="">
                 </div>
             {/each}
         </div>
@@ -128,9 +134,20 @@ h1{
             color: var(--black);
     
             &[type="submit"]{
-            width: 33%;
-            height: 3em;
-            padding: 0 calc(var(--spacing) / 2);
+                width: 33%;
+                height: 3em;
+                padding: 0 calc(var(--spacing) / 2);
+                border-radius: var(--radius);
+                border: none;
+                outline: none;
+                font-size: 1em;
+                color: var(--black);
+                background-color: var(--zomp);
+                cursor: pointer;
+            }
+        }
+
+        .label-file {
             border-radius: var(--radius);
             border: none;
             outline: none;
@@ -138,13 +155,20 @@ h1{
             color: var(--black);
             background-color: var(--zomp);
             cursor: pointer;
-            }
+            width: 20em;
+            height: fit-content;
+            height: 3em;
+            padding: 0 calc(var(--spacing) / 2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
         }
 
-        input[type="file"]{
-            height: fit-content;
-            width: 100%;
+        .input-file {
+            display: none;
         }
+        
     }
 
     #containerImages {
@@ -164,6 +188,39 @@ h1{
             align-items: center;
             flex-direction: column;
             border-radius: var(--radius);
+
+            #header {
+                height: 33%;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: center;
+
+                h2 {
+                    color: var(--black);
+                    font-size: 1.5em;
+                }
+
+                button {
+                    background-color: transparent;
+                    border: none;
+                    outline: none;
+                    cursor: pointer;
+                    transition: .5s;
+                    width: 3em;
+                    height: 3em;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 50%;
+
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.1);
+                    }
+
+                }
+            }
             
             img {
                 width: 100%;
