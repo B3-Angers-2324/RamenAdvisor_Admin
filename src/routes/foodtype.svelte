@@ -1,28 +1,41 @@
 <script lang="ts">
+    import { get } from "svelte/store";
     import Template from "../lib/template.svelte";
     import { API_URL } from "../main";
+    import { onMount } from "svelte";
 
     let foodtypes = [];
     let error = "";
+    let inputText, inputFile;
 
-    fetch(`${API_URL}/foodtype`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            data.forEach((foodtype) => {
-                foodtypes = [
-                ...foodtypes,
-                {
-                    name: foodtype.name,
-                    url: `${API_URL}/image/${foodtype.imgId}`
-                }
-            ]
+    onMount(() => {
+        getAllFoodTypes();
+    })
+
+    const getAllFoodTypes = () => {
+        foodtypes = [];
+        inputFile.value = "";
+        inputText.value = "";
+        fetch(`${API_URL}/foodtype`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             })
-        })
+            .then((res) => res.json())
+            .then((data) => {
+                data.forEach((foodtype) => {
+                    foodtypes = [
+                    ...foodtypes,
+                    {
+                        _id: foodtype._id,
+                        name: foodtype.name,
+                        url: `${API_URL}/image/${foodtype.imgId}`
+                    }
+                ]
+                })
+            })
+    }
 
     const handleSendFoodtype = (e) => {
         e.preventDefault();
@@ -42,7 +55,20 @@
             })
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
+                getAllFoodTypes();
+            })
+    }
+
+    const handleOnDelete = (id) => {
+        fetch(`${API_URL}/foodtype/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                getAllFoodTypes();
             })
     }
 </script>
@@ -51,23 +77,19 @@
     <h1>Create Foodtype</h1>
     <div id="container">
         <form action="/foodtype" on:submit|preventDefault={handleSendFoodtype}>
-            <input type="text" name="name" id="" placeholder="Name of foodtype">
-            <input name="svg" type="file">
+            <input type="text" name="name" id="" placeholder="Name of foodtype" bind:this={inputText}>
+            <input name="svg" type="file" bind:this={inputFile}>
             <input type="submit">
             <p style="color: red">{error}</p>
         </form>
-        {#each foodtypes as foodtype}
-            <div>
-                <h2>{foodtype.name}</h2>
-                <img src={foodtype.url} style="width:200px;" alt="">
-            </div>
-        {/each}
         <div id="containerImages">
-            {#each Array(5) as _,i}
+            {#each foodtypes as foodtype}
                 <div>
-                    <h2>Coucou</h2>
-                    <span class="material-symbols-rounded">delete</span>
-                    <img src="https://picsum.photos/536/35{i}" alt="">
+                    <h2>{foodtype.name}</h2>
+                    <button on:click={() => handleOnDelete(foodtype._id)}>
+                        <span class="material-symbols-rounded">delete</span>
+                    </button>
+                    <img src={foodtype.url} style="width:200px;" alt="">
                 </div>
             {/each}
         </div>
