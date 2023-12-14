@@ -48,20 +48,111 @@
 </script>
 
 <Template>
-    <form action="/foodtype" on:submit|preventDefault={handleSendFoodtype}>
-        <input type="text" name="name" id="" placeholder="Name of foodtype">
-        <input name="svg" type="file">
-        <input type="submit">
-        <p style="color: red">{error}</p>
-    </form>
-    {#each foodtypes as foodtype}
-        <div>
-            <h2>{foodtype.name}</h2>
-            <img src={foodtype.url} style="width:200px;" alt="">
+    <h1>Create Foodtype</h1>
+    <div id="container">
+        <form action="/foodtype" on:submit|preventDefault={handleSendFoodtype}>
+            <input type="text" name="name" id="" placeholder="Name of foodtype">
+            <input name="svg" type="file">
+            <input type="submit">
+            <p style="color: red">{error}</p>
+        </form>
+        {#each foodtypes as foodtype}
+            <div>
+                <h2>{foodtype.name}</h2>
+                <img src={foodtype.url} style="width:200px;" alt="">
+            </div>
+        {/each}
+        <div id="containerImages">
+            {#each Array(5) as _,i}
+                <div>
+                    <h2>Coucou</h2>
+                    <span class="material-symbols-rounded">delete</span>
+                    <img src="https://picsum.photos/536/35{i}" alt="">
+                </div>
+            {/each}
         </div>
-    {/each}
+    </div>
 </Template>
 
 <style lang="scss">
+h1{
+    color: var(--black);
+    margin-bottom: 1em;
+    padding: var(--spacing) 0 0 var(--spacing);
+}
+
+#container{
+    padding: 0 var(--spacing);
+    width: calc(100% - var(--spacing) * 2);
+    height: 100%;
+
+    form{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--spacing);
+        margin-bottom: calc(var(--spacing) / 2);
+    
+        input{
+            width: 100%;
+            height: 3em;
+            padding: 0 calc(var(--spacing) / 2);
+            border-radius: var(--radius);
+            border: none;
+            outline: none;
+            font-size: 1em;
+            color: var(--black);
+    
+            &[type="submit"]{
+            width: 33%;
+            height: 3em;
+            padding: 0 calc(var(--spacing) / 2);
+            border-radius: var(--radius);
+            border: none;
+            outline: none;
+            font-size: 1em;
+            color: var(--black);
+            background-color: var(--zomp);
+            cursor: pointer;
+            }
+        }
+
+        input[type="file"]{
+            height: fit-content;
+            width: 100%;
+        }
+    }
+
+    #containerImages {
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+        gap: 20px;
+   
+        div {
+            background-color: var(--zomp);
+            width: 15em;
+            height: 15em;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            border-radius: var(--radius);
+            
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit:  fill;
+            }
+        }
+    
+    }
+
+
+}
 
 </style>
