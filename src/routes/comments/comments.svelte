@@ -41,6 +41,7 @@
 
     function accept_message(reportId :string, index :number){
         if(deleteReport(reportId, false, index)){
+            console.log("DeleteReport return true");
             activeReport.splice(index, 1);
             loadReported(1, 4);
         }
@@ -48,30 +49,26 @@
 
     function reject_message(reportId :string, index :number){
         if(deleteReport(reportId, true, index)){
-            activeReport.splice(index, 1);
+            console.log("DeleteReport return true");
+            console.log(activeReport.splice(index, 1));
             loadReported(1, 4);
         }
     }
 
-    function deleteReport(reportId :string, rejected :boolean ,index :number){
+    async function deleteReport(reportId :string, rejected :boolean ,index :number){
         let output = false;
-        fetch(`${API_URL}/message/report/${reportId}?rejected=${rejected}`,{
+        let response = await fetch(`${API_URL}/message/report/${reportId}?rejected=${rejected}`,{
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
-            .then(async (res) => {
-                let resJson = await res.json();
-                return {status: res.status, body: resJson}
-            })
-            .then(res => {
-                if (res.status != 200) alert(res.body.message)
-                else {
-                    output = true;
-                }
-            })
+        if (response.status != 200) {
+            alert("Erreur lors de l'interaction avec le signalement")
+        }else{
+            output = true;
+        }
         return output;
     }
 </script>
