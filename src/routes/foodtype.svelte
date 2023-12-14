@@ -40,6 +40,18 @@
     const handleSendFoodtype = (e) => {
         e.preventDefault();
 
+        // test if the image is a svg
+        if (inputFile.files[0].type !== "image/svg+xml") {
+            error = "The image must be a svg";
+            return;
+        }
+
+        // test if the image is under 15Mo
+        if (inputFile.files[0].size > 15000000) {
+            error = "The image must be under 15Mo";
+            return;
+        }
+
         const apiRequest = API_URL + new URL(e.target.action).pathname;
         
         const formData = new FormData();
@@ -53,9 +65,17 @@
                 },
                 body: formData
             })
-            .then((res) => res.json())
+            .then((res) => {
+                if (res.status === 200) {
+                    getAllFoodTypes();
+                } else {
+                    return res.json();
+                }
+            })
             .then((data) => {
-                getAllFoodTypes();
+                if (data) {
+                    error = data.message;
+                }
             })
     }
 
@@ -84,8 +104,8 @@
                 Choose a file
             </label>
             <input type="submit">
-            <p style="color: red">{error}</p>
         </form>
+        <p style="color: red">{error}</p>
         <div id="containerImages">
             {#each foodtypes as foodtype}
                 <div>
