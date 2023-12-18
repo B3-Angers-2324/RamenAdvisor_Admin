@@ -38,11 +38,17 @@
         </form>
         <div id="userContainer">
             {#each owners as owner}
-                <a id="user" href="/ownerList/owner/{owner.firstName}">
+                <a id="user" href="/ownerList/owner/{owner._id}">
                     <h2>{owner.lastName}</h2>
                     <h2>{owner.firstName}</h2>
                 </a>
             {/each}
+            <!-- {#each Array(1) as _,i}
+                <a id="user" href="/ownerList/owner/{i}">
+                    <h2>Nom {i}</h2>
+                    <h2>Prénom {i}</h2>
+                </a>
+            {/each} -->
         </div>
     </div>
 </Template>

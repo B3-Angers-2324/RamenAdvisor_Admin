@@ -3,7 +3,6 @@
     import logo from '../assets/icon.png';
     import { onMount } from "svelte";
 
-    let restaurants = [];
     let owners = [];
 
     onMount (async () => {
@@ -90,8 +89,8 @@
 
             <div id="newOwnerList">
                 {#each owners as owner}
-                    <a href='/profil/{owner.id}' class="btn">
-                        {owner.lastName}
+                    <a href='/profil/{owner._id}' class="btn">
+                        {owner.lastName + " " + owner.firstName}
                     </a>
                 {/each}
             </div>

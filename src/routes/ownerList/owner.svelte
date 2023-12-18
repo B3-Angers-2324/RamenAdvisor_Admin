@@ -16,26 +16,28 @@
     let restaurants = [];
 
     onMount (async () => {
-        // getOwner();
+        fetchOwner(id);
         getRestaurants();
     })
 
-    // async function getOwner () {
-    //     fetch(`${API_URL}/admin/getOne`, {
-    //         method: "GET",
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'Authorization': 'Bearer ' + localStorage.getItem('token')
-    //         }
-    //     })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //         information = data.owner;
-    //     })
-    // }
+    async function fetchOwner(id){
+        let response = await fetch(`${API_URL}/admin/owner/profile/${id}`,{
+            method: "GET",
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                "Content-Type": "application/json"
+            }
+        })
+        let data = await response.json();
+        if(response.ok){
+            information = data;
+        }else{
+            console.log(data.message);
+        }
+    }
 
     async function getRestaurants () {
-        fetch(`${API_URL}/admin/restaurants`, {
+        fetch(`${API_URL}/admin/restaurants/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -69,18 +71,18 @@
     <div id="content">
         <div id="info">
             <h3>Info</h3>
-            <!-- <p><span>Name:</span> {information.lastName}</p>
+            <p><span>Name:</span> {information.lastName}</p>
             <p><span>Prénom</span>: {information.firstName}</p>
             <p><span>Mail:</span> {information.email}</p>
-            <p><span>Date de naissance:</span> {birthDate}</p> -->
+            <!-- <p><span>Date de naissance:</span> {birthDate}</p> -->
         </div>
         <div id="comments">
             <h3>Restaurants List</h3>
-            <!--{#each restaurants as restaurant}
+            <!-- {#each restaurants as restaurant}
                 <a href={""} class="restaurant">
                     <h2>{restaurant.name}</h2>
                 </a>
-            {/each}-->
+            {/each} -->
             {#each Array(5) as _, i}
                 <a href="" id="restaurant">
                     <h2>Restaurant {i}</h2>

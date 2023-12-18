@@ -18,25 +18,27 @@
     let error = "";
 
     onMount (async () => {
-        getOwner();
+        fetchOwner(id);
     })
-    
-    async function getOwner () {
-        fetch(`${API_URL}/admin/getOne`, {
+
+    async function fetchOwner(id){
+        let response = await fetch(`${API_URL}/admin/owner/profile/${id}`,{
             method: "GET",
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                "Content-Type": "application/json"
             }
         })
-        .then((res) => res.json())
-        .then((data) => {
-            information = data.owner;
-        })
+        let data = await response.json();
+        if(response.ok){
+            information = data;
+        }else{
+            console.log(data.message);
+        }
     }
 
     const validate = () => {
-        fetch(`${API_URL}/admin/validate`, {
+        fetch(`${API_URL}/admin/validate/${id}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
@@ -62,7 +64,6 @@
         <div id="containerInput">
             <CustomInput title="Adresse du siège social" type="text" bind:value={information["socialAdresse"]} required/>
             <CustomInput title="Numéro de siret" type="text" bind:value={information["siret"]} required disabled/> <!-- il es disable, il ne doit pas être envoyé quand il modifie quelquechose -->
-            <!-- <CustomInput title="Numéro de téléphone personnel" value="" type="tel" required/> -->
         </div>
         
     </div>
