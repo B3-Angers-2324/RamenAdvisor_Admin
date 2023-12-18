@@ -10,10 +10,12 @@
     let information = {
         firstName: "",
         lastName: "",
-        email: ""
+        email: "", 
+        ban: ""
     }
     // let birthDate = ""
     let restaurants = [];
+    let error = "";
 
     onMount (async () => {
         fetchOwner(id);
@@ -31,6 +33,7 @@
         let data = await response.json();
         if(response.ok){
             information = data;
+            updateBan();
         }else{
             console.log(data.message);
         }
@@ -54,6 +57,40 @@
             restaurants = data.restaurants;
         })
     }
+
+    async function banOwner() {
+        let response = await fetch(`${API_URL}/admin/ban/${id}`,{
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            body: JSON.stringify({
+                id: id,
+                ban: true
+            })
+        })
+        let data = await response.json();
+        if (response.ok) {
+            updateBan();
+            window.location.href = "/ownerList/home";
+        } else {
+            console.log(data.message);
+            alert("Une erreur est survenue")
+        }
+    }
+
+    async function updateBan() {
+        let banButton = document.getElementById("banButton");
+        let textStateBan = document.getElementById("textBan");
+        if (information.ban) {
+            banButton.style.display = 'none';
+            textStateBan.style.display = 'block';
+        }
+        else {
+            textStateBan.style.display = 'none';
+        }
+    }
 </script>
 
 <Template>
@@ -63,8 +100,9 @@
                 <span class="material-symbols-rounded">arrow_back</span>
             </Link>
         </div>
-        <h2>Owner {id}</h2>
+        <h2>Owner: {information.lastName} {information.firstName}</h2>
         <div id="submit">
+            <button on:click={banOwner} class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Refuser" id="banButton">close</button>
             <button class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Refuser">delete</button>
         </div>
     </div>
@@ -72,22 +110,26 @@
         <div id="info">
             <h3>Info</h3>
             <p><span>Name:</span> {information.lastName}</p>
-            <p><span>Prénom</span>: {information.firstName}</p>
+            <p><span>Prénom:</span> {information.firstName}</p>
             <p><span>Mail:</span> {information.email}</p>
             <!-- <p><span>Date de naissance:</span> {birthDate}</p> -->
         </div>
         <div id="comments">
             <h3>Restaurants List</h3>
-            <!-- {#each restaurants as restaurant}
+            {#each restaurants as restaurant}
                 <a href={""} class="restaurant">
                     <h2>{restaurant.name}</h2>
                 </a>
-            {/each} -->
-            {#each Array(5) as _, i}
+            {/each}
+            <!--{#each Array(5) as _, i}
                 <a href="" id="restaurant">
                     <h2>Restaurant {i}</h2>
                 </a>
-            {/each}
+            {/each}-->
+        </div>
+        <div>
+            &nbsp;
+            <p id="textBan">L'utilisateur est ban</p>
         </div>
     </div>
 </Template>

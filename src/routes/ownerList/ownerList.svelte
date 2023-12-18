@@ -10,7 +10,7 @@
     })
 
     async function getAllOwner () {
-        fetch(`${API_URL}/admin/getValidate`, {
+        fetch(`${API_URL}/admin/allOwner`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
