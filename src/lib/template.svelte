@@ -32,7 +32,8 @@
         //     })
         // if(!localStorage.getItem('token')){
         //     window.location.href = '/';
-        // }   
+        // }
+        // - 
     }
 
     async function getOwnerNoValidate () {
