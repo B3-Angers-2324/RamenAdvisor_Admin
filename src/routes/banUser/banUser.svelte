@@ -10,7 +10,6 @@
     let users = []
 
     async function searchUser(){
-        console.log(firstname, lastname)
         //Build URL 
         let url = `${API_URL}/admin/search/user?`
         if(firstname) url += `firstName=${firstname}&`
@@ -28,7 +27,6 @@
         } else {
             let data = await response.json();
             users = []
-            console.log(data.message);
         }
     }
 </script>
