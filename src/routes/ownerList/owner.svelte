@@ -84,7 +84,7 @@
         }
     }
 
-    async function updateBan() {
+    function updateBan() {
         let banButton = document.getElementById("banButton");
         let textStateBan = document.getElementById("textBan");
         if (information.ban) {
@@ -94,6 +94,20 @@
         else {
             textStateBan.style.display = 'none';
         }
+    }
+
+    function deleteOwner() {
+        fetch(`${API_URL}/admin/owner/profile}`, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log("data: ", data);
+        })
     }
 </script>
 
@@ -107,7 +121,7 @@
         <h2>Owner: {information.lastName} {information.firstName}</h2>
         <div id="submit">
             <button on:click={banOwner} class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Refuser" id="banButton">close</button>
-            <button class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Refuser">delete</button>
+            <button on:click={deleteOwner} class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Delete">delete</button>
         </div>
     </div>
     <div id="content">

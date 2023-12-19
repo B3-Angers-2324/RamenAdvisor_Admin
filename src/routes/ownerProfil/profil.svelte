@@ -37,18 +37,20 @@
         }
     }
 
-    const validate = () => {
-        fetch(`${API_URL}/admin/validate/${id}`, {
+    async function validate () {
+        let response = await fetch(`${API_URL}/admin/validate/${id}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         })
-        .then((res) => res.json())
-        .then((data) => {
-            error = data.messsage;
-        })
+        let data = await response.json();
+        if(response.ok){
+            window.location.href = '/home';
+        }else{
+            console.log(data.message);
+        }
     }
 </script>
 
