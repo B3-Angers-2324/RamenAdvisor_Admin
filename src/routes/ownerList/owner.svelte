@@ -97,16 +97,19 @@
     }
 
     function deleteOwner() {
-        fetch(`${API_URL}/admin/owner/profile}`, {
+        fetch(`${API_URL}/admin/deleteOwner/${id}`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
-        .then((res) => res.json())
+        .then((res) => {
+            window.location.href = '/ownerList/home'
+            res.json()
+        })
         .then((data) => {
-            console.log("data: ", data);
+            //console.log("data: ", data);
         })
     }
 </script>
@@ -130,7 +133,6 @@
             <p><span>Name:</span> {information.lastName}</p>
             <p><span>Prénom:</span> {information.firstName}</p>
             <p><span>Mail:</span> {information.email}</p>
-            <!-- <p><span>Date de naissance:</span> {birthDate}</p> -->
         </div>
         <div id="comments">
             <h3>Restaurants List</h3>
@@ -139,11 +141,6 @@
                     <h2>{restaurant.name}</h2>
                 </a>
             {/each}
-            <!--{#each Array(5) as _, i}
-                <a href="" id="restaurant">
-                    <h2>Restaurant {i}</h2>
-                </a>
-            {/each}-->
         </div>
         <div>
             &nbsp;
