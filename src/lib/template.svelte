@@ -3,9 +3,7 @@
 
     import logo from '../assets/icon.png';
 
-    // if(!localStorage.getItem('token')){
-    //     window.location.href = '/';
-    // }
+    let admin = localStorage.getItem('ad');
 
     // exemple of the middleware of front
     fetch(`${API_URL}/admin/nav`, {
@@ -17,7 +15,10 @@
         })
         .then((res) => res.json())
         .then((data) => {
-            if(data.ad) localStorage.setItem('ad', '1');
+            if(data.ad){
+                localStorage.setItem('ad', '1');
+                admin = '1';
+            }
 
             // TODO : add menu here
             
@@ -38,28 +39,30 @@
             <img src={logo} alt="logo">
             <h1>RamenAdvisor</h1>
         </div>
-        <div id="createModContainer">
-            <h3>
-                <span class="material-symbols-rounded">person_add</span>
-                Create Moderator
-            </h3>
-            <div id="foodTypeBtn">
-                <a href='/createModerator' class="btn">
-                    Create
-                </a>
+        {#if admin == '1'}
+            <div id="createModContainer">
+                <h3>
+                    <span class="material-symbols-rounded">person_add</span>
+                    Create Moderator
+                </h3>
+                <div id="foodTypeBtn">
+                    <a href='/createModerator' class="btn">
+                        Create
+                    </a>
+                </div>
             </div>
-        </div>
-        <div id="foodTypeContainer">
-            <h3>
-                <span class="material-symbols-rounded">edit</span>
-                Nourriture
-            </h3>
-            <div id="foodTypeBtn">
-                <a href='/foodtype' class="btn">
-                    Editer type nouriture
-                </a>
+            <div id="foodTypeContainer">
+                <h3>
+                    <span class="material-symbols-rounded">edit</span>
+                    Nourriture
+                </h3>
+                <div id="foodTypeBtn">
+                    <a href='/foodtype' class="btn">
+                        Editer type nouriture
+                    </a>
+                </div>
             </div>
-        </div>
+        {/if}
         <div id="newOwnerContainer">
             <h3>
                 <span class="material-symbols-rounded">list</span>
@@ -96,17 +99,19 @@
                 </a>
             </div>
         </div>
-        <div id="ownerList">
-            <h3>
-                <span class="material-symbols-rounded">list</span>
-                Owner List
-            </h3>
-            <div id="foodTypeBtn">
-                <a href='/ownerList/home' class="btn">
-                    List
-                </a>
+        {#if admin == '1'}
+            <div id="ownerList">
+                <h3>
+                    <span class="material-symbols-rounded">list</span>
+                    Owner List
+                </h3>
+                <div id="foodTypeBtn">
+                    <a href='/ownerList/home' class="btn">
+                        List
+                    </a>
+                </div>
             </div>
-        </div>
+        {/if}
         <div id="logout">
             <button on:click={logout}>
                 <span class="material-symbols-rounded">logout</span>

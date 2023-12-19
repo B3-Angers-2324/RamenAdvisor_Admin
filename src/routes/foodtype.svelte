@@ -7,6 +7,10 @@
     let foodtypes = [];
     let error = "";
     let inputText, inputFile;
+    
+    if(localStorage.getItem('ad') !== '1'){
+        window.location.href = '/home';
+    }
 
     onMount(() => {
         getAllFoodTypes();

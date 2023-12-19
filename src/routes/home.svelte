@@ -3,7 +3,6 @@
 </script>
 
 <Template>
-    <p>Home</p>
 </Template>
 
 <style lang="scss">

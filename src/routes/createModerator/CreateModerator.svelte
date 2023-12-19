@@ -7,6 +7,10 @@
   let moderators = [];
   let error = "";
 
+  if(localStorage.getItem('ad') !== '1'){
+    window.location.href = '/home';
+  }
+
   onMount ( async () => {
     getModerators();
   })

@@ -4,6 +4,10 @@
 
     let url = window.location.href;
     let id = url.substring(url.lastIndexOf('/') + 1);
+    
+    if(localStorage.getItem('ad') !== '1'){
+        window.location.href = '/home';
+    }
 
     let nom = "Doe"
     let prenom = "Jhon"
