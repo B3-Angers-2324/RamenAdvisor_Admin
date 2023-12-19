@@ -1,8 +1,36 @@
 <script>
     import Template from "../../lib/template.svelte";
+    
+    import { onMount } from "svelte";
+    import { API_URL } from "../../main";
 
     if(localStorage.getItem('ad') !== '1'){
         window.location.href = '/home';
+    }
+
+    let owners = [];
+
+    onMount (async () => {
+        getAllOwner();
+    })
+
+    async function getAllOwner () {
+        fetch(`${API_URL}/admin/allOwner`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+        .then((res) => {
+            if(res.status == 401){
+                window.location.href = '/';
+            }
+            return res.json()
+        })
+        .then((data) => {
+            owners = data.owners;
+        })
     }
 </script>
 
@@ -14,12 +42,18 @@
             <input type="text" id="name" name="name" placeholder="Prénom">
         </form>
         <div id="userContainer">
-            {#each Array(20) as _,i}
+            {#each owners as owner}
+                <a id="user" href="/ownerList/owner/{owner._id}">
+                    <h2>{owner.lastName}</h2>
+                    <h2>{owner.firstName}</h2>
+                </a>
+            {/each}
+            <!-- {#each Array(1) as _,i}
                 <a id="user" href="/ownerList/owner/{i}">
                     <h2>Nom {i}</h2>
                     <h2>Prénom {i}</h2>
                 </a>
-            {/each}
+            {/each} -->
         </div>
     </div>
 </Template>

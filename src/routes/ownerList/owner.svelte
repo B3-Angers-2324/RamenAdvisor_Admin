@@ -1,6 +1,8 @@
 <script>
     import Template from "../../lib/template.svelte";
     import { Link } from "svelte-routing";
+    import { onMount } from "svelte";
+    import { API_URL } from "../../main";
 
     let url = window.location.href;
     let id = url.substring(url.lastIndexOf('/') + 1);
@@ -9,10 +11,90 @@
         window.location.href = '/home';
     }
 
-    let nom = "Doe"
-    let prenom = "Jhon"
-    let mail = "john.doe@gmail.com"
-    let birthDate = "01/01/2000"
+    let information = {
+        firstName: "",
+        lastName: "",
+        email: "", 
+        ban: ""
+    }
+    // let birthDate = ""
+    let restaurants = [];
+    let error = "";
+
+    onMount (async () => {
+        fetchOwner(id);
+        getRestaurants();
+    })
+
+    async function fetchOwner(id){
+        let response = await fetch(`${API_URL}/admin/owner/profile/${id}`,{
+            method: "GET",
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                "Content-Type": "application/json"
+            }
+        })
+        let data = await response.json();
+        if(response.ok){
+            information = data;
+            updateBan();
+        }else{
+            console.log(data.message);
+        }
+    }
+
+    async function getRestaurants () {
+        fetch(`${API_URL}/admin/restaurants/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+        .then((res) => {
+            if(res.status == 401){
+                window.location.href = '/';
+            }
+            return res.json()
+        })
+        .then((data) => {
+            restaurants = data.restaurants;
+        })
+    }
+
+    async function banOwner() {
+        let response = await fetch(`${API_URL}/admin/ban/${id}`,{
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            body: JSON.stringify({
+                id: id,
+                ban: true
+            })
+        })
+        let data = await response.json();
+        if (response.ok) {
+            updateBan();
+            window.location.href = "/ownerList/home";
+        } else {
+            console.log(data.message);
+            alert("Une erreur est survenue")
+        }
+    }
+
+    async function updateBan() {
+        let banButton = document.getElementById("banButton");
+        let textStateBan = document.getElementById("textBan");
+        if (information.ban) {
+            banButton.style.display = 'none';
+            textStateBan.style.display = 'block';
+        }
+        else {
+            textStateBan.style.display = 'none';
+        }
+    }
 </script>
 
 <Template>
@@ -22,26 +104,36 @@
                 <span class="material-symbols-rounded">arrow_back</span>
             </Link>
         </div>
-        <h2>Owner {id}</h2>
+        <h2>Owner: {information.lastName} {information.firstName}</h2>
         <div id="submit">
+            <button on:click={banOwner} class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Refuser" id="banButton">close</button>
             <button class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Refuser">delete</button>
         </div>
     </div>
     <div id="content">
         <div id="info">
             <h3>Info</h3>
-            <p><span>Name:</span> {nom}</p>
-            <p><span>Prénom</span>: {prenom}</p>
-            <p><span>Mail:</span> {mail}</p>
-            <p><span>Date de naissance:</span> {birthDate}</p>
+            <p><span>Name:</span> {information.lastName}</p>
+            <p><span>Prénom:</span> {information.firstName}</p>
+            <p><span>Mail:</span> {information.email}</p>
+            <!-- <p><span>Date de naissance:</span> {birthDate}</p> -->
         </div>
         <div id="comments">
             <h3>Restaurants List</h3>
-            {#each Array(5) as _, i}
+            {#each restaurants as restaurant}
+                <a href={""} class="restaurant">
+                    <h2>{restaurant.name}</h2>
+                </a>
+            {/each}
+            <!--{#each Array(5) as _, i}
                 <a href="" id="restaurant">
                     <h2>Restaurant {i}</h2>
                 </a>
-            {/each}
+            {/each}-->
+        </div>
+        <div>
+            &nbsp;
+            <p id="textBan">L'utilisateur est ban</p>
         </div>
     </div>
 </Template>

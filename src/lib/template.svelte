@@ -1,7 +1,7 @@
 <script lang="ts">
     import { API_URL } from "../main";
-
     import logo from '../assets/icon.png';
+    import { onMount } from "svelte";
 
     let admin = localStorage.getItem('ad');
 
@@ -23,6 +23,56 @@
             // TODO : add menu here
             
         });
+    let owners = [];
+
+    onMount (async () => {
+        getOwnerNoValidate();
+    })
+
+    async function unName() {
+        // if(!localStorage.getItem('token')){
+        //     window.location.href = '/';
+        // }
+
+        // fetch(`${API_URL}/owner/restaurants`, {
+        //         method: 'GET',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': 'Bearer ' + localStorage.getItem('token')
+        //         },
+        //     })
+        //     .then((res) => {
+        //         if(res.status == 401){
+        //             window.location.href = '/';
+        //         }
+        //         return res.json()
+        //     })
+        //     .then((data) => {
+        //         restaurants = data.restaurants;
+        //     })
+        // if(!localStorage.getItem('token')){
+        //     window.location.href = '/';
+        // }   
+    }
+
+    async function getOwnerNoValidate () {
+        fetch(`${API_URL}/admin/getValidate`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+        .then((res) => {
+            if(res.status == 401){
+                window.location.href = '/';
+            }
+            return res.json()
+        })
+        .then((data) => {
+            owners = data.owners;
+        })
+    }
 
     const logout = () => {
         localStorage.removeItem('token');
@@ -69,13 +119,17 @@
                 Liste des Owners en attente
             </h3>
             <!-- la liste des commentaires -->
+
+
             <div id="newOwnerList">
-                {#each Array(5) as _,i}
-                    <a href='/profil/{i}' class="btn">
-                        Owner name {i}
+                {#each owners as owner}
+                    <a href='/profil/{owner._id}' class="btn">
+                        {owner.lastName + " " + owner.firstName}
                     </a>
                 {/each}
             </div>
+
+
         </div>
         <div id="foodTypeContainer">
             <h3>
