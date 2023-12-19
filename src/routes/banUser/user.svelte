@@ -33,7 +33,6 @@
             user = data;
             user.birthDay = new Date(user.birthDay).toLocaleDateString('fr-FR', {year: 'numeric', month: 'long', day: 'numeric'});
         }else{
-            console.log(data.message);
         }
     }
 
@@ -54,7 +53,6 @@
             }
             more = data.more;
         }catch(err){
-            console.log(err);
         }
     }
 
@@ -74,7 +72,6 @@
         if (response.ok) {
             window.location.href = "/banUser/home";
         } else {
-            console.log(data.message);
             alert("Une erreur est survenue")
         }
     }
