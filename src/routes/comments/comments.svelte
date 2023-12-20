@@ -6,12 +6,23 @@
     let activeReport = []
     let noMoreReport = false;
 
-    onMount(() => {
+    let restaurantName = "";
+
+    onMount(async() => {
         loadReported(5, 0);
     });
 
-    function loadReported(limit: number, offset: number){
-        fetch(`${API_URL}/message/reported?limit=${limit}&offset=${offset}`,{
+    async function onRestaurantNameChange(e){
+        e.preventDefault();
+        activeReport = [];
+        noMoreReport = false;
+        loadReported(5, 0, restaurantName);
+    }
+
+    function loadReported(limit: number, offset: number, name: string = ""){
+        let url : string = `${API_URL}/message/reported?limit=${limit}&offset=${offset}`;
+        (name != "") ? url += `&restaurantName=${name}` : null;
+        fetch(url ,{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,6 +41,7 @@
 
     function accept_message(reportId :string, index :number){
         if(deleteReport(reportId, false, index)){
+            console.log("DeleteReport return true");
             activeReport.splice(index, 1);
             loadReported(1, 4);
         }
@@ -37,36 +49,36 @@
 
     function reject_message(reportId :string, index :number){
         if(deleteReport(reportId, true, index)){
-            activeReport.splice(index, 1);
+            console.log("DeleteReport return true");
+            console.log(activeReport.splice(index, 1));
             loadReported(1, 4);
         }
     }
 
-    function deleteReport(reportId :string, rejected :boolean ,index :number){
+    async function deleteReport(reportId :string, rejected :boolean ,index :number){
         let output = false;
-        fetch(`${API_URL}/message/report/${reportId}?rejected=${rejected}`,{
+        let response = await fetch(`${API_URL}/message/report/${reportId}?rejected=${rejected}`,{
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
         })
-            .then(async (res) => {
-                let resJson = await res.json();
-                return {status: res.status, body: resJson}
-            })
-            .then(res => {
-                if (res.status != 200) alert(res.body.message)
-                else {
-                    output = true;
-                }
-            })
+        if (response.status != 200) {
+            alert("Erreur lors de l'interaction avec le signalement")
+        }else{
+            output = true;
+        }
         return output;
     }
 </script>
 
 <Template>
     <h1>Commentaires</h1>
+
+    <form on:submit={onRestaurantNameChange}>
+        <input type="text" id="restaurant_name" name="restaurant_name" placeholder="Nom du restaurant" bind:value={restaurantName}>
+    </form>
 
     {#each activeReport as report, i}
         <div class="commentairesContainer">
@@ -89,11 +101,35 @@
     {/each}
     {#if noMoreReport}
         <div class="commentairesContainer">No more report</div>
+    {:else}
+        <div class="commentairesContainer">. . .</div>
     {/if}
 </Template>
 
 
 <style lang="scss">
+    form{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--spacing);
+        padding: 0 0 1em 0 ;
+
+        input{
+            margin: 0 var(--spacing);
+            width: calc(100% - var(--spacing) * 2);
+            height: 3em;
+            padding: 0 calc(var(--spacing) / 2);
+            border-radius: var(--radius);
+            border: none;
+            outline: none;
+            font-size: 1em;
+            color: var(--black);
+        }
+    }
+
     .commentairesContainer{
         display: flex;
         justify-content: center;
