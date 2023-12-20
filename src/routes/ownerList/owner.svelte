@@ -98,7 +98,7 @@
 
     function deleteOwner() {
         fetch(`${API_URL}/admin/deleteOwner/${id}`, {
-            method: "PATCH",
+            method: "delete",
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -109,7 +109,6 @@
             res.json()
         })
         .then((data) => {
-            //console.log("data: ", data);
         })
     }
 </script>

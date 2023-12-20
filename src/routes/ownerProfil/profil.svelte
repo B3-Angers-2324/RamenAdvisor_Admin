@@ -3,6 +3,7 @@
     import CustomInput from "../../lib/customInput.svelte";
     import { API_URL } from "../../main";
     import { onMount } from "svelte";
+    import Modal from "../../lib/modal.svelte";
 
     let url = window.location.href;
     let id = url.substring(url.lastIndexOf('/') + 1);
@@ -16,6 +17,7 @@
         siret: ""
     }
     let error = "";
+    let showModal = false;
 
     onMount (async () => {
         fetchOwner(id);
@@ -52,6 +54,22 @@
             console.log(data.message);
         }
     }
+
+    async function handleDeleteRestaurant(){
+        fetch(`${API_URL}/admin/deleteOwner/${id}`, {
+            method: "delete",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+        })
+        .then((res) => {
+            window.location.href = '/home'
+            res.json()
+        })
+        .then((data) => {
+        })
+    }
 </script>
 
 <Template>
@@ -71,8 +89,13 @@
     </div>
     <div id="submit">
         <!-- <button class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Refuser">close</button> -->
-        <button on:click={validate} class="material-symbols-rounded icon" title="Accepter">done</button>
+        <button on:click={validate} class="material-symbols-rounded validate" title="Accepter">done</button>
+            
+        <button type="button" class="material-symbols-rounded delete" on:click={() => showModal = true}>delete</button>
     </div>
+    <Modal bind:showModal validate={handleDeleteRestaurant}>
+        <h2 slot="header">Voulez-vous vraiment supprimer cette owner ?</h2>
+    </Modal>
 </Template>
 
 <style lang="scss">
@@ -102,19 +125,25 @@
         margin: var(--spacing) 0;
         gap: var(--spacing);
 
-        .icon{
+        .validate, .delete{
             position: relative;
             cursor: pointer;
             padding: calc(var(--spacing) / 2) calc(var(--spacing) * 2);
             border-radius: var(--radius);
             border: none;
-            background-color: var(--brunswick-green);
             color: var(--bone);
-            font-size: 2.5em;
     
             &:focus{
                 outline: none;
             }
+        }
+
+        .validate{
+            background-color: var(--brunswick-green);
+        }
+        .delete{
+            margin-left: 2em;
+            background-color: var(--danger);
         }
     }
 </style>
