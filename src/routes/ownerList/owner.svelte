@@ -122,7 +122,7 @@
         </div>
         <h2>Owner: {information.lastName} {information.firstName}</h2>
         <div id="submit">
-            <button on:click={banOwner} class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Refuser" id="banButton">close</button>
+            <button on:click={banOwner} class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Ban" id="banButton">close</button>
             <button on:click={deleteOwner} class="material-symbols-rounded icon" style="background-color:var(--danger);" title="Delete">delete</button>
         </div>
     </div>
